@@ -12,12 +12,7 @@ namespace HomeEnergyApi.Validations
                 return new ValidationResult("Invalid home data.");
             }
 
-            // if ((forecast.Summary == "Hot" && forecast.TemperatureF < 90) ||
-            //     (forecast.Summary == "Cold" && forecast.TemperatureF > 30))
-            // {
-            //     return new ValidationResult("The temperature does not match the summary description.");
-            // }
-            if (!home.StreetAddress.Any(c => char.IsDigit(c)) || home.StreetAddress.Length > 64)
+            if (string.IsNullOrEmpty(home.StreetAddress) || !home.StreetAddress.Any(c => char.IsDigit(c)) || home.StreetAddress.Length > 64)
             {
                 return new ValidationResult("Street Address must contain a number and have fewer than 64 characters");
             }
