@@ -7,7 +7,7 @@
 
 ## Instructions
 
-In this lesson you will be expanding upon the tests you wrote in `HomeEnergyApi.Tests/Lesson55Tests/Model/UserRepository.Tests.cs`.
+In this lesson you will create a new helper method for JWT Authentication, and a new Web Application Factory to assist with your User Acceptance Testing. You will use these to test the HomeAdminController, and in the process you will learn about test code coverage.
 **Important:** Do not modify any test files inside `HomeEnergyApi.Tests/GradingTests/` as these are used to grade your assignment.
 
 - To run the commands from the lecture for this assignment
@@ -34,6 +34,9 @@ In this lesson you will be expanding upon the tests you wrote in `HomeEnergyApi.
     - Return `content?.Token`
   - Create a new class `TokenResponse`
     - Add a public property `Token` of type `string`
+
+- In `HomeEnergyApi.Tests/Lesson58Tests/Controllers/AuthenticationV1Controller.Tests.cs`
+    - Remove the class `TokenResponse`
 
 - In `HomeEnergyApi.Tests/Lesson58Tests/Helpers/UserAcceptanceTest.cs`
   - Create a new public class `UserAcceptanceTest` implementing `IClassFixture<WebApplicationFactory<Program>>` and `IAsyncLifetime`

@@ -5,50 +5,155 @@ public class LessonTests
 {
     private readonly string[] _requiredTestMethods =
     {
-        "ShouldCreateUser_WhenValidRequest",
-        "ShouldReturnBadRequest_WhenUsernameAlreadyExists",
-        "ShouldReturnOk_WhenValidCredentialsProvided",
-        "ShouldReturnUnauthorized_WhenInvalidCredentialsProvided"
+        "ShouldCreateHome_WhenGivenValidHome",
+        "ShouldNotAllow_WhenUserIsNotAdmin",
+        "ShouldNotCreateHome_WhenHomeStreetAddressDoesNotContainDigit",
+        "ShouldNotCreateHome_WhenHomeStreetAddressIsTooLong"
     };
 
     [Fact]
-    public void AuthenticationV1ControllerTestExists()
+    public void JwtHelperClassExists()
     {
         var testAssembly = Assembly.GetExecutingAssembly();
-        var authenticationTestClass = testAssembly.GetTypes()
-            .FirstOrDefault(t => t.Name == "AuthenticationV1ControllerTest");
+        var jwtHelperClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "JwtHelper");
 
-        Assert.NotNull(authenticationTestClass);
+        Assert.NotNull(jwtHelperClass);
     }
 
     [Fact]
-    public void AuthenticationV1ControllerTestHasAllRequiredMethods()
+    public void JwtHelperHasGenerateTokenAsyncMethod()
     {
         var testAssembly = Assembly.GetExecutingAssembly();
-        var authenticationTestClass = testAssembly.GetTypes()
-            .FirstOrDefault(t => t.Name == "AuthenticationV1ControllerTest");
+        var jwtHelperClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "JwtHelper");
 
-        Assert.NotNull(authenticationTestClass);
+        Assert.NotNull(jwtHelperClass);
+
+        var method = jwtHelperClass.GetMethod("GenerateTokenAsync", BindingFlags.Public | BindingFlags.Static);
+        Assert.NotNull(method);
+        Assert.Equal(typeof(Task<string>), method.ReturnType);
+    }
+
+    [Fact]
+    public void TokenResponseClassExists()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var tokenResponseClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "TokenResponse");
+
+        Assert.NotNull(tokenResponseClass);
+
+        var tokenProperty = tokenResponseClass.GetProperty("Token");
+        Assert.NotNull(tokenProperty);
+        Assert.Equal(typeof(string), tokenProperty.PropertyType);
+    }
+
+    [Fact]
+    public void UserAcceptanceTestClassExists()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var userAcceptanceTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "UserAcceptanceTest");
+
+        Assert.NotNull(userAcceptanceTestClass);
+    }
+
+    [Fact]
+    public void UserAcceptanceTestImplementsIAsyncLifetime()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var userAcceptanceTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "UserAcceptanceTest");
+
+        Assert.NotNull(userAcceptanceTestClass);
+
+        var implementsIAsyncLifetime = userAcceptanceTestClass.GetInterfaces()
+            .Any(i => i.Name == "IAsyncLifetime");
+        
+        Assert.True(implementsIAsyncLifetime, "UserAcceptanceTest should implement IAsyncLifetime");
+    }
+
+    [Fact]
+    public void UserAcceptanceTestHasInitializeAsyncMethod()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var userAcceptanceTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "UserAcceptanceTest");
+
+        Assert.NotNull(userAcceptanceTestClass);
+
+        var initializeMethod = userAcceptanceTestClass.GetMethod("InitializeAsync");
+        Assert.NotNull(initializeMethod);
+        Assert.Equal(typeof(Task), initializeMethod.ReturnType);
+    }
+
+    [Fact]
+    public void UserAcceptanceTestHasDisposeAsyncMethod()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var userAcceptanceTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "UserAcceptanceTest");
+
+        Assert.NotNull(userAcceptanceTestClass);
+
+        var disposeMethod = userAcceptanceTestClass.GetMethod("DisposeAsync");
+        Assert.NotNull(disposeMethod);
+        Assert.Equal(typeof(Task), disposeMethod.ReturnType);
+    }
+
+    [Fact]
+    public void HomeAdminControllerTestExists()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var homeAdminTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "HomeAdminControllerTest");
+
+        Assert.NotNull(homeAdminTestClass);
+    }
+
+    [Fact]
+    public void HomeAdminControllerTestExtendsUserAcceptanceTest()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var homeAdminTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "HomeAdminControllerTest");
+
+        Assert.NotNull(homeAdminTestClass);
+
+        var baseType = homeAdminTestClass.BaseType;
+        Assert.NotNull(baseType);
+        Assert.Equal("UserAcceptanceTest", baseType.Name);
+    }
+
+    [Fact]
+    public void HomeAdminControllerTestHasAllRequiredMethods()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var homeAdminTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "HomeAdminControllerTest");
+
+        Assert.NotNull(homeAdminTestClass);
 
         foreach (var requiredMethodName in _requiredTestMethods)
         {
-            var testMethod = authenticationTestClass.GetMethod(requiredMethodName);
-            Assert.True(testMethod != null, $"Method {requiredMethodName} not found in AuthenticationV1ControllerTest class");
+            var testMethod = homeAdminTestClass.GetMethod(requiredMethodName);
+            Assert.True(testMethod != null, $"Method {requiredMethodName} not found in HomeAdminControllerTest class");
         }
     }
 
     [Fact]
-    public void AuthenticationV1ControllerTestMethodsHaveFactAttribute()
+    public void HomeAdminControllerTestMethodsHaveFactAttribute()
     {
         var testAssembly = Assembly.GetExecutingAssembly();
-        var authenticationTestClass = testAssembly.GetTypes()
-            .FirstOrDefault(t => t.Name == "AuthenticationV1ControllerTest");
+        var homeAdminTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "HomeAdminControllerTest");
 
-        Assert.NotNull(authenticationTestClass);
+        Assert.NotNull(homeAdminTestClass);
 
         foreach (var requiredMethodName in _requiredTestMethods)
         {
-            var testMethod = authenticationTestClass.GetMethod(requiredMethodName);
+            var testMethod = homeAdminTestClass.GetMethod(requiredMethodName);
             Assert.NotNull(testMethod);
 
             var factAttribute = testMethod.GetCustomAttribute<FactAttribute>();
@@ -56,45 +161,20 @@ public class LessonTests
         }
     }
 
-    // [Fact]
-    // public void AllStudentTestsPass()
-    // {
-    //     var testAssembly = Assembly.GetExecutingAssembly();
-    //     var authenticationTestClass = testAssembly.GetTypes()
-    //         .FirstOrDefault(t => t.Name == "AuthenticationV1ControllerTest");
+    [Fact]
+    public void HomeAdminControllerTestMethodsReturnTask()
+    {
+        var testAssembly = Assembly.GetExecutingAssembly();
+        var homeAdminTestClass = testAssembly.GetTypes()
+            .FirstOrDefault(t => t.Name == "HomeAdminControllerTest");
 
-    //     Assert.NotNull(authenticationTestClass);
+        Assert.NotNull(homeAdminTestClass);
 
-    //     var instance = Activator.CreateInstance(authenticationTestClass);
-
-    //     // Call InitializeAsync if the class implements IAsyncLifetime
-    //     var initializeMethod = authenticationTestClass.GetMethod("InitializeAsync");
-    //     if (initializeMethod != null)
-    //     {
-    //         var initResult = initializeMethod.Invoke(instance, null);
-    //         if (initResult is Task initTask)
-    //         {
-    //             initTask.GetAwaiter().GetResult();
-    //         }
-    //     }
-
-    //     foreach (var requiredMethodName in _requiredTestMethods)
-    //     {
-    //         var testMethod = authenticationTestClass.GetMethod(requiredMethodName);
-    //         Assert.True(testMethod != null, $"Method {requiredMethodName} not found in AuthenticationV1ControllerTest class");
-
-    //         try
-    //         {
-    //             var result = testMethod.Invoke(instance, null);
-    //             if (result is Task task)
-    //             {
-    //                 task.GetAwaiter().GetResult();
-    //             }
-    //         }
-    //         catch (TargetInvocationException ex)
-    //         {
-    //             Assert.Fail($"Test {requiredMethodName} failed: {ex.InnerException?.Message ?? ex.Message}");
-    //         }
-    //     }
-    // }
+        foreach (var requiredMethodName in _requiredTestMethods)
+        {
+            var testMethod = homeAdminTestClass.GetMethod(requiredMethodName);
+            Assert.NotNull(testMethod);
+            Assert.Equal(typeof(Task), testMethod.ReturnType);
+        }
+    }
 }
