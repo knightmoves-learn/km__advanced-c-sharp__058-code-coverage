@@ -70,3 +70,8 @@ public class AuthenticationV1ControllerTest : IClassFixture<WebApplicationFactor
         Assert.Equal("Invalid username or password.", content);
     }
 }
+
+public class TokenResponse
+{
+    public string Token { get; set; }
+}
