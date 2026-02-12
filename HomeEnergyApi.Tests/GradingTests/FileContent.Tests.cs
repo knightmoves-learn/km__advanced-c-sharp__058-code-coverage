@@ -1,171 +1,47 @@
 public class FileTests
 {
     private static string programFilePath = @"../../../../HomeEnergyApi/Program.cs";
-    private static string homeDtoFilePath = @"../../../../HomeEnergyApi/Dtos/HomeDto.cs";
-    private static string fileContentTestsPath = @"../../../../HomeEnergyApi/Services/ZipCodeLocationService.cs";
-    private static string IWriteRepositoryFilePath = @"../../../../HomeEnergyApi/Models/IWriteRepository.cs";
+    private static string homeRepositoryTestPath = @"../../../Lesson60Tests/Model/HomeRepository.Tests.cs";
+    private static string userRepositoryTestPath = @"../../../Lesson60Tests/Model/UserRepository.Tests.cs";
+    private static string utilityProviderRepositoryTestPath = @"../../../Lesson60Tests/Model/UtilityProviderRepository.Tests.cs";
     private string programContent = File.ReadAllText(programFilePath);
-    private string homeDtoContent = File.ReadAllText(homeDtoFilePath);
-    private string zipCodeLocationServiceContent = File.ReadAllText(fileContentTestsPath);
-    private string IWriteRepositoryContent = File.ReadAllText(IWriteRepositoryFilePath);
+    private string homeRepositoryTestContent = File.ReadAllText(homeRepositoryTestPath);
+    private string userRepositoryTestContent = File.ReadAllText(userRepositoryTestPath);
+    private string utilityProviderRepositoryTestContent = File.ReadAllText(utilityProviderRepositoryTestPath);
 
     [Fact]
-    public void DoesProgramFileAddScopedServiceHomeRepository()
+    public void DoesProgramAddUserandUtilityPRovidertoDbContext()
     {
-        bool containsHomeRepositoryScoped = programContent.Contains("builder.Services.AddScoped<HomeRepository>();");
-        Assert.True(containsHomeRepositoryScoped,
-            "HomeEnergyApi/Program.cs does not add a Scoped Service of type `HomeRepository`");
+        bool containsUserRepositoryDbContext = programContent.Contains("builder.Services.AddDbContext<UserDbContext>(");
+        Assert.True(containsUserRepositoryDbContext,
+            "HomeEnergyApi/Program.cs does not add a Scoped Service of type `UserDbContext`");
+
+        bool containsUtilityProviderDbContext = programContent.Contains("builder.Services.AddDbContext<UtilityProviderDbContext>(");
+        Assert.True(containsUtilityProviderDbContext,
+            "HomeEnergyApi/Program.cs does not add a Scoped Service of type `UtilityProviderDbContext`");
     }
 
     [Fact]
-    public void DoesProgramFileAddScopedServiceIReadRepositoryWithRequiredServiceProviderHomeRepository()
+    public void DoesHomeRepositoryTestUseMockHomeDb()
     {
-        bool containsIReadScoped = programContent.Contains("builder.Services.AddScoped<IReadRepository<int, Home>>(provider => provider.GetRequiredService<HomeRepository>());");
-        Assert.True(containsIReadScoped,
-            "HomeEnergyApi/Program.cs does not add a Scoped Service of type `IReadRepository` with the required Service Provider of type `HomeRepository`");
+        bool containsMockHomeDb = homeRepositoryTestContent.Contains("MockHomeDb()");
+        Assert.True(containsMockHomeDb,
+            "HomeEnergyApi.Tests/Lesson60Tests/Model/HomeRepository.Tests.cs should use MockHomeDb()");
     }
 
     [Fact]
-    public void DoesProgramFileAddScopedServiceIWriteRepositoryWithRequiredServiceHomeProviderRepository()
+    public void DoesHomeRepositoryTestUseMockUserDb()
     {
-        bool containsIWriteScoped = programContent.Contains("builder.Services.AddScoped<IWriteRepository<int, Home>>(provider => provider.GetRequiredService<HomeRepository>());");
-        Assert.True(containsIWriteScoped,
-            "HomeEnergyApi/Program.cs does not add a Scoped Service of type `IWriteRepository` with the required Service Provider of type `HomeRepository`");
+        bool containsMockUserDb = userRepositoryTestContent.Contains("MockUserDb()");
+        Assert.True(containsMockUserDb,
+            "HomeEnergyApi.Tests/Lesson60Tests/Model/HomeRepository.Tests.cs should use MockUserDb()");
     }
 
     [Fact]
-    public void DoesProgramFileAddTransientForZipLocationService()
+    public void DoesHomeRepositoryTestUseMockUtilityProviderDb()
     {
-        bool containsTransient = programContent.Contains("builder.Services.AddTransient<ZipCodeLocationService>();");
-        Assert.True(containsTransient,
-            "HomeEnergyApi/Program.cs does not add a Transient Service of type `ZipLocationService`");
-    }
-
-    [Fact]
-    public void DoesProgramFileAddHttpClientForZipLocationService()
-    {
-        bool containsHttpClient = programContent.Contains("builder.Services.AddHttpClient<ZipCodeLocationService>();");
-        Assert.True(containsHttpClient,
-            "HomeEnergyApi/Program.cs does not add a HttpClient Service of type `ZipLocationService`");
-    }
-
-    [Fact]
-    public void DoesProgramFileAddDBContextService()
-    {
-        bool containsHttpClient = programContent.Contains("builder.Services.AddDbContext<HomeDbContext>");
-        Assert.True(containsHttpClient,
-            "HomeEnergyApi/Program.cs does not add a DbContext Service with type HomeDBContext");
-    }
-
-    [Fact]
-    public void DoesProgramFileDBContextServiceHaveUseSQLITEOption()
-    {
-        bool containsHttpClient = programContent.Contains("options.UseSqlite");
-        Assert.True(containsHttpClient,
-            "HomeEnergyApi/Program.cs does not add a DbContext Service that uses the option UseSqlite");
-    }
-
-    [Fact]
-    public void DoesProgramFileGetRequiredServiceOfTypeHomeDbContext()
-    {
-        bool containsHttpClient = programContent.Contains(".ServiceProvider.GetRequiredService<HomeDbContext>();");
-        Assert.True(containsHttpClient,
-            "HomeEnergyApi/Program.cs does not get a required service of type HomeDbContext");
-    }
-
-    [Fact]
-    public void DoesProgramFileCallDatabaseMigrate()
-    {
-        bool containsHttpClient = programContent.Contains(".Database.Migrate();");
-        Assert.True(containsHttpClient,
-            "HomeEnergyApi/Program.cs does not call Database.Migrate()");
-    }
-
-    [Fact]
-    public void DoesProgramAddAutoMapperWithTypeHomeProfile()
-    {
-        bool containsAutoMapperHomeProfile = programContent.Contains("builder.Services.AddAutoMapper(typeof(HomeProfile));");
-        Assert.True(containsAutoMapperHomeProfile,
-            "HomeEnergyApi/Program.cs adds an Automapper service with type HomeProfile");
-    }
-
-    [Fact]
-    public void DoesProgramAddScopedServicesUtilityProviderRepository()
-    {
-        bool containsUtilityProviderRepo1 = programContent.Contains("builder.Services.AddScoped<UtilityProviderRepository>();");
-        Assert.True(containsUtilityProviderRepo1,
-            "HomeEnergyApi/Program.cs does not add a scoped service for UtilityProviderRepository");
-    }
-
-    [Fact]
-    public void DoesProgramAddScopedServicesHomeUtilityProviderRepository()
-    {
-        bool containsHomeUtilityProviderRepo1 = programContent.Contains("builder.Services.AddScoped<HomeUtilityProviderRepository>();");
-        Assert.True(containsHomeUtilityProviderRepo1,
-            "HomeEnergyApi/Program.cs does not add a scoped service for HomeUtilityProviderRepository");
-    }
-
-    [Fact]
-    public void DoesProgramAddTransientHomeUtilityProviderService()
-    {
-        bool containsTransientHomeUtilityProviderService = programContent.Contains("builder.Services.AddTransient<HomeUtilityProviderService>();");
-        Assert.True(containsTransientHomeUtilityProviderService,
-            "HomeEnergyApi/Program.cs does not add a transient service with type HomeUtilityProviderService");
-    }
-
-    [Fact]
-    public void DoesHomeDtoAddHomeStreetAddressValidation()
-    {
-        bool containsHomeStreetAddressValidation = homeDtoContent.Contains("[HomeStreetAddressValid]");
-        Assert.True(containsHomeStreetAddressValidation,
-            "HomeEnergyApi/Dtos/HomeDto.cs does not contain the attribute '[HomeStreetAddressValid]'");
-    }
-
-    [Fact]
-    public void DoesProgramAddControllerOptionToAddGlobalExceptionFilter()
-    {
-        bool containsOptionAddingGlobalExceptionFilter = programContent.Contains("options.Filters.Add<GlobalExceptionFilter>();");
-        Assert.True(containsOptionAddingGlobalExceptionFilter,
-            "HomeEnergyApi/Program.cs does not add a controller option adding 'GlobalExceptionFilter' as a filter");
-    }
-
-    [Fact]
-    public void DoesProgramAddScopedUserRepository()
-    {
-        bool containsScopedUserRepostory = programContent.Contains("builder.Services.AddScoped<IUserRepository, UserRepository>();");
-        Assert.True(containsScopedUserRepostory,
-            "HomeEnergyApi/Program.cs does not add a scoped service with types 'IUserRepository' and 'UserRepository'");
-    }
-
-    [Fact]
-    public void DoesProgramAddSingletonValueHasher()
-    {
-        bool containsSingletonValueHasher = programContent.Contains("builder.Services.AddSingleton<ValueHasher>();");
-        Assert.True(containsSingletonValueHasher,
-            "HomeEnergyApi/Program.cs does not add a value hasher singleton service");
-    }
-
-    [Fact]
-    public void DoesProgramAddSingletonValueEncryptor()
-    {
-        bool containsSingletonValueHasher = programContent.Contains("builder.Services.AddSingleton<ValueEncryptor>();");
-        Assert.True(containsSingletonValueHasher,
-            "HomeEnergyApi/Program.cs does not add a value encryptor singleton service");
-    }
-
-    [Fact]
-    public void DoesZipCodeLocationServiceExecuteAsParallel()
-    {
-        bool containsAsParallel = zipCodeLocationServiceContent.Contains(".AsParallel()");
-        Assert.True(containsAsParallel,
-            "HomeEnergyApi/Services/ZipCodeLocationService.cs does not execute the LINQ query using AsParallel()");
-    }
-
-    [Fact]
-    public void DoesIWriteRepositoryUseINumberGenericTypeConstraint()
-    {
-        bool containsINumberConstraint = IWriteRepositoryContent.Contains("where TId : INumber<TId>");
-        Assert.True(containsINumberConstraint,
-            "HomeEnergyApi/Models/IWriteRepository.cs does not use the INumber<TId> generic type constraint");
+        bool containsMockUtilityProviderDb = utilityProviderRepositoryTestContent.Contains("MockUtilityProviderDb()");
+        Assert.True(containsMockUtilityProviderDb,
+            "HomeEnergyApi.Tests/Lesson60Tests/Model/HomeRepository.Tests.cs should use MockUtilityProviderDb()");
     }
 }
