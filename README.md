@@ -26,9 +26,9 @@ In this lesson you will create a new helper method for JWT Authentication, and a
       - `Password` set to `"TestPassword"` concatenated with `guid`
       - `Role` set to `role`
       - `HomeStreetAddress` set to `"123 Main St"`
-    - Create a variable named `initialSetupResponse` and assign it the result of awaiting `PostAsJsonAsync()` on `client`, passing in `"/v1/authentication/register"` and `userDto`
+    - Create a variable named `initialSetupResponse` and assign it the result of awaiting `PostAsJsonAsync()` on `client`, passing in `"/v1/authentication/register"` and the variable `userDto`
     - Assert that `initialSetupResponse.StatusCode` is equal to `HttpStatusCode.OK`
-    - Create a variable named `response` and assign it the result of awaiting `PostAsJsonAsync()` on `client`, passing in `"/v1/authentication/token"` and `userDto`
+    - Create a variable named `response` and assign it the result of awaiting `PostAsJsonAsync()` on `client`, passing in `"/v1/authentication/token"` and the variable `userDto`
     - Create a variable named `content` and assign it the result of awaiting `ReadFromJsonAsync<TokenResponse>()` on `response.Content`
     - Assert that `response.StatusCode` is equal to `HttpStatusCode.OK`
     - Return `content?.Token`
@@ -55,7 +55,7 @@ In this lesson you will create a new helper method for JWT Authentication, and a
 - In `HomeEnergyApi.Tests/Lesson58Tests/Controllers/HomeAdminController.Tests.cs`
   - Create a new public class `HomeAdminControllerTest` extending `UserAcceptanceTest`
   - Add a private readonly property `_homeDto` of type `HomeDto`
-  - Create a constructor that takes a parameter `factory` of type `WebApplicationFactory<Program>` and calls the base constructor passing in `factory` and `"Admin"`
+  - Create a public constructor that takes a parameter `factory` of type `WebApplicationFactory<Program>` and calls the base constructor passing in `factory` and `"Admin"`
     - In the constructor body, create a variable named `result` of type `PaginatedResult<Home>` and initialize it
     - Assign a new `List<Home>()` to `result.Items`
     - Assign a new `HomeDto` to `_homeDto` with the following properties:
