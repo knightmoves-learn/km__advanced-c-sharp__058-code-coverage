@@ -5,31 +5,28 @@ using HomeEnergyApi.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
-using System.Security.Authentication;
-
 public class HomeAdminControllerTest : UserAcceptanceTest
 {
     private readonly HomeDto _homeDto;
 
-    HomeAdminControllerTest(WebApplicationFactory<Program> factory): base(factory, "Admin")
+    public HomeAdminControllerTest(WebApplicationFactory<Program> factory): base(factory, "Admin")
     {
-        var result = PaginatedResult<Home>;
-        
+        var result = new PaginatedResult<Home>();
         result.Items = new List<Home>();
         _homeDto = new HomeDto
         {
-          OwnerLastName = "Testy",
-          StreetAddress = "49 Test St",
-          City = "Test City",
-          MonthlyElectricUsage = 1234  
+            OwnerLastName = "Testy",
+            StreetAddress = "49 Test St",
+            City = "Test City",
+            MonthlyElectricUsage = 1234,
         };
-
     }
 
     [Fact]
-    public async ShouldCreateHome_WhenGivenValidHome()
+    public async Task ShouldCreateHome_WhenGivenValidHome()
     {
         var response = await _client.PostAsJsonAsync("/admin/Homes", _homeDto);
+        Console.WriteLine(await response.Content.ReadAsStringAsync());
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
         var createdHome = await response.Content.ReadFromJsonAsync<Home>();
@@ -48,6 +45,7 @@ public class HomeAdminControllerTest : UserAcceptanceTest
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var response = await _client.PostAsJsonAsync("/admin/Homes", _homeDto);
+
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
@@ -55,15 +53,19 @@ public class HomeAdminControllerTest : UserAcceptanceTest
     public async Task ShouldNotCreateHome_WhenHomeStreetAddressDoesNotContainDigit()
     {
         _homeDto.StreetAddress = "NoNumber St";
+
         var response = await _client.PostAsJsonAsync("/admin/Homes", _homeDto);
+
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
     public async Task ShouldNotCreateHome_WhenHomeStreetAddressIsTooLong()
     {
-        _homeDto.StreetAddress = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        _homeDto.StreetAddress = new string('A', 65);
+
         var response = await _client.PostAsJsonAsync("/admin/Homes", _homeDto);
+
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

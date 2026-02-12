@@ -6,7 +6,7 @@ public class UserAcceptanceTest : IClassFixture<WebApplicationFactory<Program>>,
     protected readonly HttpClient _client;
     private readonly string _role;
 
-    UserAcceptanceTest(WebApplicationFactory<Program> factory, string role)
+    public UserAcceptanceTest(WebApplicationFactory<Program> factory, string role)
     {
         _client = factory.CreateClient();
         _client.DefaultRequestHeaders.Add("X-API-Key", ConfigHelper.LookupSecret("ApiKey"));
